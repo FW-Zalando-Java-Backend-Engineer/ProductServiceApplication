@@ -1,5 +1,5 @@
 # First stage - build
-FROM maven:3.9.4-eclipse-temurin-24 AS builder
+FROM maven:3.9.4-eclipse-temurin-21 AS builder
 # Set working directory inside the container
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Second stage - Run JAR
-FROM eclipse-temurin:24-jdk-jammy
+FROM eclipse-temurin:21-jdk-jammy
 
 # Set working directory inside the container
 WORKDIR /app
