@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +39,19 @@ public class ProductService {
                 .collect(
                         Collectors.toList()
                 );
+    }
+
+    /**
+     * Adds a new product if it's not already present, and creates inventory for it.
+     */
+    public ProductDto addProduct(Product product, int quantity){
+        Optional<Product> existing = repo.findByName(product.getName());
+        if (existing.isPresent()) {
+            throw new RuntimeException("Product already exists");
+        }
+        Product savedProduct = repo.save(product);
+        inventoryClient.createInventory(savedProduct.getId(), quantity);
+        return ProductMapper.toDto(savedProduct, quantity);
     }
 
 }
