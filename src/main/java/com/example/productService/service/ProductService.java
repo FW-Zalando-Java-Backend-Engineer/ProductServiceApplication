@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Business logic service for product management.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -17,19 +20,24 @@ public class ProductService {
     private final ProductRepository repo;
     private final InventoryClient inventoryClient;
 
-    public Product addProduct(Product product){
-        return repo.save(product);
-    }
 
+    /**
+     * Retrieves all products and attaches their live stock quantity.
+     */
     public List<ProductDto> getAllProducts(){
-        return repo.findAll().stream()
+        return repo.findAll()
+                .stream()
                 .map(
-                        product -> {
-                            boolean inStock = inventoryClient.isInStock(product.getId());
-                            return ProductMapper.toDto(product, inStock);
-                        }
+                        product -> ProductMapper
+                                            .toDto( product,
+                                              inventoryClient.getStockQuantity(
+                                                      product.getId()
+                                              )
+                                )
                 )
-                .collect(Collectors.toList());
+                .collect(
+                        Collectors.toList()
+                );
     }
 
 }

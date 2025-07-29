@@ -1,12 +1,12 @@
 server:
-  port: ${PRODUCT_SERVICE_PORT:8586}
+  port: ${PRODUCT_SERVICE_PORT:8586} # Spring Boot reads the port from .env
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB} # Container name "product-db"
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update #  will auto-create the database tables.
     show-sql: true
